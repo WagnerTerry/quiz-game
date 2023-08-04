@@ -24,16 +24,24 @@
       </button>
 
       <section v-if="this.answerSubmitted" class="result">
-        <h4 v-if="this.chosenAnswer == this.correctAnswer">
-          &#9989; Parabéns, a resposta "{{ this.correctAnswer }}" é correta
-        </h4>
-        <h4 v-else>
-          &#10060; Desculpe, você escolheu a resposta errada. O correto é "{{
-            this.correctAnswer
-          }}"
-        </h4>
+        <h4
+          v-if="this.chosenAnswer == this.correctAnswer"
+          v-html="
+            '&#9989; Parabéns, a resposta ' + this.correctAnswer + ' é correta.'
+          "
+        ></h4>
+        <h4
+          v-else
+          v-html="
+            '&#10060; Desculpe, você escolheu a resposta errada. O correto é ' +
+            this.correctAnswer +
+            '.'
+          "
+        ></h4>
 
-        <button class="send" type="button">Próxima Questão</button>
+        <button @click="this.getNewQuestion()" class="send" type="button">
+          Próxima Questão
+        </button>
       </section>
     </template>
   </div>
@@ -79,15 +87,22 @@ export default {
         }
       }
     },
+    getNewQuestion() {
+      this.answerSubmitted = false;
+      this.chosenAnswer = undefined;
+      this.question = undefined;
+
+      this.axios
+        .get("https://opentdb.com/api.php?amount=1&category=18")
+        .then((response) => {
+          this.question = response.data.results[0].question;
+          this.incorrectAnswers = response.data.results[0].incorrect_answers;
+          this.correctAnswer = response.data.results[0].correct_answer;
+        });
+    },
   },
   created() {
-    this.axios
-      .get("https://opentdb.com/api.php?amount=1&category=18")
-      .then((response) => {
-        this.question = response.data.results[0].question;
-        this.incorrectAnswers = response.data.results[0].incorrect_answers;
-        this.correctAnswer = response.data.results[0].correct_answer;
-      });
+    this.getNewQuestion();
   },
 };
 
