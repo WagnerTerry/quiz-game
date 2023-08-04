@@ -1,6 +1,7 @@
 <template>
   <div>
-    <ScoreBoard />
+    <!-- os dois pontos : são para informações dinâmicas -->
+    <ScoreBoard :winCount="this.winCount" :loseCount="this.loseCount" />
     <template v-if="this.question">
       <h1 v-html="this.question"></h1>
 
@@ -64,6 +65,8 @@ export default {
       correctAnswer: undefined,
       chosenAnswer: undefined,
       answerSubmitted: false,
+      winCount: 0,
+      loseCount: 0,
     };
   },
 
@@ -86,9 +89,9 @@ export default {
       } else {
         this.answerSubmitted = true;
         if (this.chosenAnswer == this.correctAnswer) {
-          console.log("voce conseguiu");
+          this.winCount++;
         } else {
-          console.log("voce errou");
+          this.loseCount++;
         }
       }
     },
