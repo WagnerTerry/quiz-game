@@ -31,7 +31,8 @@ export default {
   computed: {
     answers(){
       var answers = JSON.parse( JSON.stringify(this.incorrectAnswers));
-      answers.push(this.correctAnswer);
+      // usando shuffle para randomizar a resposta do quiz.
+      answers.splice(Math.round(Math.random() * answers.length), 0, this.correctAnswer);
       return answers;
     }
   },    
