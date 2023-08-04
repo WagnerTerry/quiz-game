@@ -1,16 +1,17 @@
 <template>
   <div>
-    <h1 v-html="this.question"></h1>
 
-    <input type="radio" name="options" value="True">
-    <label>True</label>
-    <br>
-
-    <input type="radio" name="options" value="False">
-    <label>False</label>
-    <br>
-
-    <button class="send" type="button">Send</button>
+    <template v-if="this.question">
+      <h1 v-html="this.question"></h1>
+  
+      <template v-for="(answer, index) in this.answers" :key="index">
+        <input type="radio" name="options" :value="answer" v-model="this.chosen_answer">
+        <label v-html="answer"></label>
+        <br>
+  
+      </template>
+      <button @click="this.submitAnswer()" class="send" type="button">Send</button>
+    </template>
   </div>
 </template>
 
@@ -20,34 +21,45 @@ export default {
   name: 'App',
 
   // data() => função que retorna alguma coisa, no caso retorna um objeto que contém as propriedades de data
-  data(){
+  data() {
     return {
       question: undefined,
       incorrectAnswers: undefined,
-      correctAnswer: undefined
+      correctAnswer: undefined,
+      chosen_answer: undefined
     }
   },
 
   computed: {
-    answers(){
-      var answers = JSON.parse( JSON.stringify(this.incorrectAnswers));
-      // usando shuffle para randomizar a resposta do quiz.
+    answers() {
+      var answers = JSON.parse(JSON.stringify(this.incorrectAnswers));
+      // Ordenação aleatória (shuffle) do array de respostas
       answers.splice(Math.round(Math.random() * answers.length), 0, this.correctAnswer);
       return answers;
     }
-  },    
-
-  created(){
+  },
+  methods: {
+    submitAnswer(){
+      if(!this.chosen_answer){
+        alert("Escolha uma das opções")
+      } else {
+        if(this.chosen_answer == this.correctAnswer){
+          alert("voce conseguiu")
+        }
+      }
+    }
+  },
+  created() {
     this.axios
-    .get("https://opentdb.com/api.php?amount=1&category=18")
-    .then((response) => {
-      this.question = response.data.results[0].question;
-      this.incorrectAnswers = response.data.results[0].incorrect_answers;
-      this.correctAnswer = response.data.results[0].correct_answer;
+      .get("https://opentdb.com/api.php?amount=1&category=18")
+      .then((response) => {
+        this.question = response.data.results[0].question;
+        this.incorrectAnswers = response.data.results[0].incorrect_answers;
+        this.correctAnswer = response.data.results[0].correct_answer;
 
-    })
+      })
   }
-  
+
 }
 
 //https://opentdb.com/api.php?amount=1&category=18
@@ -63,7 +75,7 @@ export default {
   margin: 60px auto;
   max-width: 960px;
 
-  input[type=radio]{
+  input[type=radio] {
     margin: 12px 4px;
   }
 
