@@ -1,6 +1,6 @@
 # quiz-game
 
-Projeto em Vue 3 com o intuito de criar um quiz usando a api da open Trivia
+Projeto em Vue 3 com o intuito de criar um quiz usando a api da open Trivia. Projeto usado no curso de Vue 3 , professor Ivan Lourenço.
 
 ## Project setup
 
